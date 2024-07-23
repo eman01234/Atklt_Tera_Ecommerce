@@ -10,7 +10,11 @@ function ProductList() {
       </h2>
       <div className="flex flex-wrap justify-center gap-20">
         {products.map((product) => (
-          <Link to={`/ProductDetail`} key={product.id} className="no-underline">
+          <Link
+            to={`/product/${product.id}`}
+            key={product.id}
+            className="no-underline"
+          >
             <div className="bg-white border border-gray-300 rounded-lg p-5 w-[300px] shadow-md text-left cursor-pointer">
               <img
                 className="w-full rounded-lg mb-2.5 h-72 object-contain"

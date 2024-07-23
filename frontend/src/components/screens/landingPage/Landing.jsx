@@ -3,20 +3,23 @@ import Header from "../../common/Header/Header";
 import Features from "./Features";
 import Hero from "./Hero";
 import Footer from "../../common/Footer/Footer";
-import Header2 from "../../common/Header/Header2";
+import Categories from "../Catagories/Categories";
 import MerchantPromo from "./MerchantPromo";
-import Footer2 from "../../common/Footer/Footer2";
+
 import MonthlySubscription from "./Monthly";
+import PricingCard from "../Subscription/PricingCard";
+import PricingPage from "../Subscription/PricingPage";
+
 const Landing = () => {
   return (
     <>
       <Header />
       <Hero />
-      <Header2 />
+      <Categories />
       <MerchantPromo />
+      <PricingPage />
       <Features />
       <MonthlySubscription />
-      <Footer2 />
       <Footer />
     </>
   );

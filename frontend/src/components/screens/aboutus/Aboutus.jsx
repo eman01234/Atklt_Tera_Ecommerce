@@ -1,12 +1,13 @@
 import React from "react";
+import { Danat, Etsub, Gabi, Reyan } from "../../../assets/images/Index";
 
 const AboutUs = () => {
   return (
     <div className="container mx-auto py-12 px-6">
-      <h1 className="text-5xl font-bold text-center mb-12 text-gray-800">
+      <h1 className="text-5xl font-bold text-center mb-10 text-gray-800">
         About Us
       </h1>
-      <div className="mb-16">
+      <div className="mb-12 bg-orange-50 p-10">
         <h2 className="text-3xl font-semibold mb-4 text-gray-700">
           Our Company
         </h2>
@@ -16,7 +17,7 @@ const AboutUs = () => {
           mission is to promote healthy eating habits and support local farmers.
         </p>
       </div>
-      <div className="mb-16">
+      <div className="mb-12 bg-red-50 p-10">
         <h2 className="text-3xl font-semibold mb-4 text-gray-700">
           Our Mission
         </h2>
@@ -27,7 +28,7 @@ const AboutUs = () => {
           organic produce accessible to everyone.
         </p>
       </div>
-      <div className="mb-16">
+      <div className="mb-16 bg-orange-50 p-10">
         <h2 className="text-3xl font-semibold mb-4 text-gray-700">
           Our Values
         </h2>
@@ -50,38 +51,40 @@ const AboutUs = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           <div className="text-center">
             <img
-              src="path_to_team_member_image_1"
+              src={Danat}
               alt="Team Member 1"
               className="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg"
             />
-            <h3 className="text-xl font-bold text-gray-700">Team Member 1</h3>
+            <h3 className="text-xl font-bold text-gray-700">Danat Tewodros</h3>
             <p className="text-gray-600">CEO</p>
           </div>
           <div className="text-center">
             <img
-              src="path_to_team_member_image_2"
+              src={Gabi}
               alt="Team Member 2"
               className="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg"
             />
-            <h3 className="text-xl font-bold text-gray-700">Team Member 2</h3>
+            <h3 className="text-xl font-bold text-gray-700">
+              Gebrelua Theodros
+            </h3>
             <p className="text-gray-600">COO</p>
           </div>
           <div className="text-center">
             <img
-              src="path_to_team_member_image_3"
+              src={Etsub}
               alt="Team Member 3"
               className="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg"
             />
-            <h3 className="text-xl font-bold text-gray-700">Team Member 3</h3>
+            <h3 className="text-xl font-bold text-gray-700">Etsubdink Fikru</h3>
             <p className="text-gray-600">CTO</p>
           </div>
           <div className="text-center">
             <img
-              src="path_to_team_member_image_4"
+              src={Reyan}
               alt="Team Member 4"
               className="w-32 h-32 rounded-full mx-auto mb-4 shadow-lg"
             />
-            <h3 className="text-xl font-bold text-gray-700">Team Member 4</h3>
+            <h3 className="text-xl font-bold text-gray-700">Reyan Geragn</h3>
             <p className="text-gray-600">CFO</p>
           </div>
         </div>

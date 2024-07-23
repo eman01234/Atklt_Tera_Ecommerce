@@ -16,6 +16,10 @@ import Bg from "./bg.png";
 import Grocery from "./grocery.png";
 import Shop from "./shop.png";
 import Avater from "./avater.png";
+import Danat from "./danat.png";
+import Etsub from "./etsub.png";
+import Gabi from "./gabi.png";
+import Reyan from "./reyan.png";
 export {
   elephant,
   vegi1,
@@ -35,4 +39,8 @@ export {
   Grocery,
   Shop,
   Avater,
+  Danat,
+  Etsub,
+  Gabi,
+  Reyan,
 };

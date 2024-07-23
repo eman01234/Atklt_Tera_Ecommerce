@@ -14,8 +14,8 @@ const MonthlySubscription = () => {
         <div className="flex items-center justify-center flex-1">
           <img
             src={Grocery}
-            alt="Groceries Promo 1"
-            className="w-64 h-64object-cover"
+            alt="Groceries Image 1"
+            className="w-60 h-60 object-contain"
           />
         </div>
         <div className="text-center md:text-left flex-1">
@@ -31,7 +31,7 @@ const MonthlySubscription = () => {
             deliveries of the finest organic products right to your doorstep!
           </p>
           <Link
-            to="/subscribe"
+            to="/Subscription"
             className="inline-block bg-teal-600 text-white py-3 px-6 rounded-lg text-lg hover:bg-teal-700"
           >
             Subscribe Now
@@ -40,8 +40,8 @@ const MonthlySubscription = () => {
         <div className="flex items-center justify-center flex-1 mt-6 md:mt-0">
           <img
             src={Shop}
-            alt="Groceries Promo 2"
-            className="w-80 h-64 object-cover"
+            alt="Groceries Image 2"
+            className="w-80 h-64 object-contain"
           />
         </div>
       </div>

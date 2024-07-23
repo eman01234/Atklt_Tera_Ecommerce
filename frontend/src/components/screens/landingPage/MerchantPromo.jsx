@@ -9,7 +9,7 @@ const MerchantPromo = () => {
           <img
             src={Vegi6}
             alt="Merchant Promo 1"
-            className="w-56 h-56 object-cover"
+            className="w-56 h-56 object-contain"
           />
         </div>
         <div className="text-center md:text-left flex-1">
@@ -24,8 +24,8 @@ const MerchantPromo = () => {
             organic products. Apply now to become a merchant!
           </p>
           <Link
-            to="/apply-merchant"
-            className="inline-block bg-green-600 text-white py-3 px-6 rounded-lg text-lg hover:bg-green-700"
+            to="/signUp"
+            className="inline-block bg-primary text-white py-2 px-4 rounded-lg text-md hover:bg-yellow-400"
           >
             Apply Now
           </Link>

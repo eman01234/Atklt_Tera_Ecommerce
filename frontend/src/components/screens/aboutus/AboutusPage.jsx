@@ -1,19 +1,15 @@
 import React from "react";
 import Header from "../../common/Header/Header";
+import AboutUs from "./Aboutus";
 import Footer from "../../common/Footer/Footer";
-import ProductList from "./ProductList";
-
-import Categories from "../Catagories/Categories";
-const product = () => {
+const AboutusPage = () => {
   return (
     <div>
       <Header />
-
-      <Categories />
-      <ProductList />
+      <AboutUs />
       <Footer />
     </div>
   );
 };
 
-export default product;
+export default AboutusPage;
