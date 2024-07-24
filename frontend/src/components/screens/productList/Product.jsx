@@ -11,6 +11,7 @@ const product = () => {
 
       <Categories />
       <ProductList />
+
       <Footer />
     </div>
   );

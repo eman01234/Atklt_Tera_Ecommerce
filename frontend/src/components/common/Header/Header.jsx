@@ -55,11 +55,11 @@ const Header = () => {
                     onClick={toggleDropdown}
                   >
                     <img
-                      className="w-28 h-9 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                      className="w-20 h-8 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
                       src={Avater}
                       alt="Bordered avatar"
                     />
-                    {/* <IoIosArrowDown className="text-xl absolute -bottom-5 -right-2 transform -translate-y-1/2" /> */}
+                    <IoIosArrowDown className="text-xl  transform -translate-y-1/2" />
                   </a>
                   {dropdownOpen && (
                     <div className="absolute right-0 mt-44 w-48 bg-white rounded-md shadow-lg z-10">
@@ -92,13 +92,7 @@ const Header = () => {
                       </ul>
                     </div>
                   )}
-                  <span>|</span>
-                  <Link
-                    to="/Chat"
-                    className="flex items-center gap-2 hover:text-red-700"
-                  >
-                    <MdMessage />
-                  </Link>
+
                   <span>|</span>
                   <Link
                     to="/CartItems"

@@ -16,7 +16,7 @@ import Vegitables from "./components/screens/Catagories/Vegitables";
 import Fruits from "./components/screens/Catagories/Fruits";
 import Spices from "./components/screens/Catagories/Spices";
 import CartItems from "./components/screens/cart/CartItems";
-import Aboutus from "./components/screens/aboutus/Aboutus";
+
 import ProductDetail from "./components/screens/productDetail/ProductDetail";
 import Signup_customer from "./components/screens/auth/signup/Signup_customer";
 import Forgot from "./components/screens/auth/Forget/Forgot";
@@ -25,9 +25,14 @@ import UserProfile from "./components/screens/auth/user/UserProfile";
 import UserSettings from "./components/screens/auth/user/UserSettings";
 import Logout from "./components/screens/auth/user/Logout";
 import AddProduct from "./components/screens/merchant/AddProduct";
-import ChatPage from "./components/screens/chatpage/ChatPage";
+import ChatPage from "./components/common/floatMessage/ChatPage";
 import SubscriptionPage from "./components/screens/Subscription/Subscription";
 import AboutusPage from "./components/screens/aboutus/AboutusPage";
+import Dashboard from "./components/modules/Dashboard/Dashboard";
+import OrderDetail from "./components/modules/Dashboard/OrderDetail";
+import OrderList from "./components/modules/Dashboard/OrderList";
+import DeliveryList from "./components/modules/Dashboard/DeliveryList";
+import FloatChat from "./components/common/floatMessage/FloatChat";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -50,6 +55,11 @@ const router = createBrowserRouter(
       <Route path="/Chat" element={<ChatPage />} />
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/Subscription" element={<SubscriptionPage />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/orders" element={<OrderList />} />
+      <Route path="/order/:id" element={<OrderDetail />} />
+      <Route path="/delivery-list" element={<DeliveryList />} />
+      <Route path="/Delivery_order/:id" element={<OrderDetail />} />
     </>
   )
 );
@@ -57,6 +67,7 @@ const router = createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
+    <FloatChat />
     <RouterProvider router={router} />
   </React.StrictMode>
 );

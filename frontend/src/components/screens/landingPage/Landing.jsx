@@ -7,14 +7,16 @@ import Categories from "../Catagories/Categories";
 import MerchantPromo from "./MerchantPromo";
 
 import MonthlySubscription from "./Monthly";
-import PricingCard from "../Subscription/PricingCard";
+
 import PricingPage from "../Subscription/PricingPage";
+import FloatChat from "../../common/floatMessage/FloatChat";
 
 const Landing = () => {
   return (
     <>
       <Header />
       <Hero />
+
       <Categories />
       <MerchantPromo />
       <PricingPage />

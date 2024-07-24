@@ -47,12 +47,12 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-lg p-8 space-y-8 bg-white rounded-lg shadow-lg">
+    <div className="flex items-start justify-center min-h-screen mx-10 ">
+      <div className="w-full max-h-full p-8  space-y-4 bg-white rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold text-center text-gray-800">
           Add Product
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex gap-4">
             <div className="w-1/2">
               <label className="block text-sm font-medium text-gray-700">
