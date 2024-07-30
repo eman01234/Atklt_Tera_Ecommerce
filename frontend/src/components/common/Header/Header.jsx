@@ -6,7 +6,7 @@ import { UserPen } from "lucide-react";
 import { menu } from "../../../constant/Headerconstant";
 import { Avater } from "../../../assets/images/Index";
 import { MdMessage } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 const Header = () => {
   // Separate the "Account" item from the rest of the menu
@@ -51,7 +51,7 @@ const Header = () => {
                 <>
                   <a
                     href="#"
-                    className="flex items-center gap-2 hover:text-red-700 relative"
+                    className="flex items-end gap-2 hover:text-red-700 relative"
                     onClick={toggleDropdown}
                   >
                     <img
@@ -59,7 +59,11 @@ const Header = () => {
                       src={Avater}
                       alt="Bordered avatar"
                     />
-                    <IoIosArrowDown className="text-xl  transform -translate-y-1/2" />
+                    {!dropdownOpen ? (
+                      <IoIosArrowDown className="text-xl transform -translate-y-1/2 pt-2" />
+                    ) : (
+                      <IoIosArrowUp className="text-xl transform -translate-y-1/2 pt-2" />
+                    )}
                   </a>
                   {dropdownOpen && (
                     <div className="absolute right-0 mt-44 w-48 bg-white rounded-md shadow-lg z-10">
