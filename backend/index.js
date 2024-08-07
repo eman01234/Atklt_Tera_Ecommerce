@@ -1,27 +1,26 @@
-const express = require("express");
-const connectDatabase = require("./config/sqldb");
-const bodyParser = require("body-parser");
+import express from "express";
+import connectDB from "./config/db.js";
+import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// Connect Database
+connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 8000;
-// Middleware
-app.use(bodyParser.json());
-
-// Call the function to connect to the database
-connectDatabase();
-
-// // Routes
-// app.get("/api/users", (req, res) => {
-//   db.query("SELECT * FROM users", (err, results) => {
-//     if (err) {
-//       console.error("Error executing query: " + err.stack);
-//       res.status(500).send("Error fetching users");
-//       return;
-//     }
-//     res.json(results);
-//   });
-// });
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.use(express.json());
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
 });
+// Init Middleware
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
+// Define Routes
+import authRoutes from "./routes/auth.js";
+app.use("/api/auth", authRoutes);
+
+const PORT = process.env.PORT || 5001;
+
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
