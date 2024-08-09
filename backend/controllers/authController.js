@@ -58,18 +58,21 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Check if user exists
     let user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
 
+    // Compare provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
 
+    // Generate JWT token with user ID and role
     const payload = {
       user: {
         id: user.id,
@@ -80,7 +83,7 @@ export const loginUser = async (req, res) => {
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: 360000 },
+      { expiresIn: "1h" }, //  expiration time
       (err, token) => {
         if (err) throw err;
         res.json({ token });
