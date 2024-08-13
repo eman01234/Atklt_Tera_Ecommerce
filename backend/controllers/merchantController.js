@@ -1,85 +1,141 @@
-import Product from "../models/product.js";
-import { validationResult } from "express-validator";
+import Merchant from "../models/merchant.js";
+import User from "../models/user.js";
+import bcrypt from "bcryptjs"; // For hashing passwords
+import { validationResult } from "express-validator"; // For input validation
+import path from "path"; // For handling file paths
 
-// Add a new product for a specific merchant
-export const addProductForMerchant = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { merchantId, name, description, category, price } = req.body;
-  const imageUrl = req.file ? req.file.path : null; // using multer for file uploads
-
+// Register a new Merchant
+export const createMerchant = async (req, res) => {
   try {
-    const newProduct = new Product({
-      merchant: merchantId,
-      name,
-      description,
-      category,
-      price,
-      imageUrl,
+    // Validate request input
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    // Handle file upload
+    const trade_permit = req.file;
+    if (!trade_permit) {
+      return res.status(400).json({ msg: "Trade permit file is required" });
+    }
+
+    // Set the image URL
+    const tradePermitPath = path.join("uploads", trade_permit.filename);
+
+    // Destructure request body
+    const { role, firstName, lastName, email, password, phoneNumber, address } =
+      req.body;
+
+    // Check if the user already exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ msg: "User already exists" });
+    }
+
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new User
+    user = new User({
+      role,
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      phoneNumber,
+      address,
     });
 
-    const savedProduct = await newProduct.save();
-    res.status(201).json(savedProduct);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    // Save the User
+    await user.save();
+
+    // Create a new Merchant
+    const merchant = new Merchant({
+      trade_permit: tradePermitPath,
+      user: user._id,
+    });
+
+    // Save the Merchant
+    await merchant.save();
+
+    // Respond with success
+    res.status(201).json({ msg: "Merchant registered successfully" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
   }
 };
 
-// Update product details for a specific merchant
-export const updateProductForMerchant = async (req, res) => {
-  const { name, description, category, price } = req.body;
-
+// Get all merchants
+export const getAllMerchants = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.productId);
+    const merchants = await Merchant.find()
+      .populate("user")
+      .populate("products");
+    res.status(200).json(merchants);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Error fetching merchants" });
+  }
+};
 
-    if (!product) {
-      return res.status(404).json({ msg: "Product not found" });
+// Get a merchant by ID
+export const getMerchantById = async (req, res) => {
+  try {
+    const merchant = await Merchant.findById(req.params.id)
+      .populate("user")
+      .populate("products");
+    if (!merchant) {
+      return res.status(404).json({ message: "Merchant not found" });
     }
+    res.status(200).json(merchant);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Error fetching merchant" });
+  }
+};
 
-    product.name = name || product.name;
-    product.description = description || product.description;
-    product.category = category || product.category;
-    product.price = price || product.price;
+// Update a merchant
+export const updateMerchant = async (req, res) => {
+  try {
+    const { isVerified, isBlocked, products } = req.body;
+
+    // Handle file upload for trade_permit update
+    let trade_permit = req.body.trade_permit;
     if (req.file) {
-      product.imageUrl = req.file.path;
+      trade_permit = path.join("uploads", req.file.filename);
     }
 
-    await product.save();
-    res.status(200).json(product);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    const updatedMerchant = await Merchant.findByIdAndUpdate(
+      req.params.id,
+      { trade_permit, isVerified, isBlocked, products },
+      { new: true, runValidators: true }
+    )
+      .populate("user")
+      .populate("products");
+
+    if (!updatedMerchant) {
+      return res.status(404).json({ message: "Merchant not found" });
+    }
+
+    res.status(200).json(updatedMerchant);
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ message: "Error updating merchant" });
   }
 };
 
-// Delete a product for a specific merchant
-export const deleteProductForMerchant = async (req, res) => {
+// Delete a merchant
+export const deleteMerchant = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.productId);
-
-    if (!product) {
-      return res.status(404).json({ msg: "Product not found" });
+    const deletedMerchant = await Merchant.findByIdAndDelete(req.params.id);
+    if (!deletedMerchant) {
+      return res.status(404).json({ message: "Merchant not found" });
     }
-
-    await product.remove();
-    res.status(200).json({ msg: "Product removed" });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
-  }
-};
-
-// Display all products for a specific merchant
-export const getAllProductsForMerchant = async (req, res) => {
-  try {
-    const products = await Product.find({ merchant: req.params.merchantId });
-    res.status(200).json(products);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    res.status(200).json({ message: "Merchant deleted successfully" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Error deleting merchant" });
   }
 };

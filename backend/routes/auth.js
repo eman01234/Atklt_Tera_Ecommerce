@@ -1,28 +1,27 @@
 import express from "express";
-import { check } from "express-validator";
 import {
-  registerUser,
   loginUser,
-  getAllUser,
-  getUser,
-} from "../controllers/authController.js";
+  getUserById,
+  getAllUsers,
+  updateUser,
+  deleteUser,
+} from "../controllers/authController.js"; // Adjust the path as necessary
 
 const router = express.Router();
 
-router.post("/register", registerUser);
-
+// Login user
 router.post("/login", loginUser);
-router.get("/users", getAllUser);
-router.get("/users/:id", getUser);
+
+// Get all users
+router.get("/", getAllUsers);
+
+// Get a user by ID
+router.get("/:id", getUserById);
+
+// Update a user by ID
+router.put("/:id", updateUser);
+
+// Delete a user by ID
+router.delete("/:id", deleteUser);
+
 export default router;
-
-// const express = require('express')
-// const router = express.Router();
-// const albumController = require('../controllers/AlbumController')
-// const protect = require('../middleware/authMiddleware')
-
-// // Album routes
-// router.post('/albums',  createAlbum);
-
-// router.put('/albums/:id', updateAlbumById);
-// router.delete('/albums/:id', .....)

@@ -15,6 +15,7 @@ const customerSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Order",
+        required: false,
       },
     ],
   },

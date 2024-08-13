@@ -4,51 +4,7 @@ import { validationResult } from "express-validator";
 import User from "../models/user.js";
 import generateToken from "../utils/generateToken.js";
 
-export const registerUser = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { role, firstName, lastName, email, password, phoneNumber, address } =
-    req.body;
-
-  try {
-    let userExists = await User.findOne({ email });
-
-    if (userExists) {
-      return res.status(400).json({ msg: "User already exists" });
-    }
-
-    const newUser = new User({
-      role,
-      firstName,
-      lastName,
-      email,
-      password,
-      phoneNumber,
-      address,
-    });
-
-    const salt = await bcrypt.genSalt(10);
-    newUser.password = await bcrypt.hash(password, salt);
-    const savedUser = await newUser.save();
-
-    generateToken(res, savedUser._id);
-
-    return res.status(201).json({
-      id: savedUser._id,
-      role: savedUser.role,
-      firstName: savedUser.firstName,
-      lastName: savedUser.lastName,
-      email: savedUser.email,
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
-  }
-};
-
+// Login user
 export const loginUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -83,7 +39,7 @@ export const loginUser = async (req, res) => {
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }, //  expiration time
+      { expiresIn: "1h" }, // expiration time
       (err, token) => {
         if (err) throw err;
         res.json({ token });
@@ -95,23 +51,74 @@ export const loginUser = async (req, res) => {
   }
 };
 
-export const getUser = async (req, res) => {
+// Get a user by ID
+export const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id).select("-password");
     if (!user) {
-      return res.status(404).send();
+      return res.status(404).json({ msg: "User not found" });
     }
-    res.status(200).send(user);
+    res.status(200).json(user);
   } catch (error) {
-    res.status(500).send(error);
+    console.error(error.message);
+    res.status(500).send("Server error");
   }
 };
 
-export const getAllUser = async (req, res) => {
+// Get all users
+export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
     res.status(200).json(users);
   } catch (error) {
+    console.error(error.message);
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Update a user
+export const updateUser = async (req, res) => {
+  try {
+    const { role, firstName, lastName, email, password, phoneNumber, address } =
+      req.body;
+
+    // Hash the password if it is being updated
+    const updatedData = {
+      role,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      address,
+    };
+    if (password) {
+      updatedData.password = await bcrypt.hash(password, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      updatedData,
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!updatedUser)
+      return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Delete a user
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
