@@ -1,22 +1,31 @@
 import AdminUser from "../models/adminUser.js";
 import bcrypt from "bcryptjs";
+import { validationResult } from "express-validator";
 
-// Create a new admin or manager
+// Create Admin User
 export const createAdminUser = async (req, res) => {
-  const { role, firstName, lastName, email, password, phoneNumber, address } =
-    req.body;
-
   try {
-    // Check if the user already exists
-    let userExists = await AdminUser.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+    // Validate request input
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    // Hash the password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const { role, firstName, lastName, email, password, phoneNumber, address } =
+      req.body;
 
-    const newAdminUser = new AdminUser({
+    // Check if the user already exists
+    let user = await AdminUser.findOne({ email });
+    if (user) {
+      return res.status(400).json({ msg: "User already exists" });
+    }
+
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new AdminUser
+    user = new AdminUser({
       role,
       firstName,
       lastName,
@@ -26,88 +35,75 @@ export const createAdminUser = async (req, res) => {
       address,
     });
 
-    const savedAdminUser = await newAdminUser.save();
-    res.status(201).json(savedAdminUser);
+    // Save the AdminUser
+    await user.save();
+
+    res.status(201).json({ msg: "AdminUser created successfully", user });
   } catch (error) {
     console.error(error.message);
-    res.status(400).json({ message: "Error creating admin user" });
+    res.status(500).send("Server Error");
   }
 };
 
-// Get all admin users
+// Get all Admin Users
 export const getAllAdminUsers = async (req, res) => {
   try {
-    const adminUsers = await AdminUser.find().select("-password");
-    res.status(200).json(adminUsers);
+    const users = await AdminUser.find();
+    res.status(200).json(users);
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Error fetching admin users" });
+    res.status(500).json({ message: "Error fetching users" });
   }
 };
 
-// Get an admin user by ID
+// Get Admin User by ID
 export const getAdminUserById = async (req, res) => {
   try {
-    const adminUser = await AdminUser.findById(req.params.id).select(
-      "-password"
-    );
-    if (!adminUser) {
-      return res.status(404).json({ message: "Admin user not found" });
+    const user = await AdminUser.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "AdminUser not found" });
     }
-    res.status(200).json(adminUser);
+    res.status(200).json(user);
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Error fetching admin user" });
+    res.status(500).json({ message: "Error fetching user" });
   }
 };
 
-// Update an admin user
+// Update Admin User
 export const updateAdminUser = async (req, res) => {
-  const { role, firstName, lastName, email, password, phoneNumber, address } =
-    req.body;
+  const { firstName, lastName, phoneNumber, address } = req.body;
 
   try {
-    let updatedData = {
-      role,
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      address,
-    };
-
-    // Hash the password if it is being updated
-    if (password) {
-      updatedData.password = await bcrypt.hash(password, 10);
-    }
-
-    const updatedAdminUser = await AdminUser.findByIdAndUpdate(
+    const updatedUser = await AdminUser.findByIdAndUpdate(
       req.params.id,
-      updatedData,
+      { firstName, lastName, phoneNumber, address },
       { new: true, runValidators: true }
-    ).select("-password");
+    );
 
-    if (!updatedAdminUser) {
-      return res.status(404).json({ message: "Admin user not found" });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "AdminUser not found" });
     }
 
-    res.status(200).json(updatedAdminUser);
+    res
+      .status(200)
+      .json({ msg: "AdminUser updated successfully", updatedUser });
   } catch (error) {
     console.error(error.message);
-    res.status(400).json({ message: "Error updating admin user" });
+    res.status(400).json({ message: "Error updating user" });
   }
 };
 
-// Delete an admin user
+// Delete Admin User
 export const deleteAdminUser = async (req, res) => {
   try {
-    const deletedAdminUser = await AdminUser.findByIdAndDelete(req.params.id);
-    if (!deletedAdminUser) {
-      return res.status(404).json({ message: "Admin user not found" });
+    const deletedUser = await AdminUser.findByIdAndDelete(req.params.id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "AdminUser not found" });
     }
-    res.status(200).json({ message: "Admin user deleted successfully" });
+    res.status(200).json({ message: "AdminUser deleted successfully" });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Error deleting admin user" });
+    res.status(500).json({ message: "Error deleting user" });
   }
 };

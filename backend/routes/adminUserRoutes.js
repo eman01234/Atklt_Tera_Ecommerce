@@ -5,11 +5,11 @@ import {
   getAdminUserById,
   updateAdminUser,
   deleteAdminUser,
-} from "../controllers/adminUserController.js"; // Adjust the path as necessary
+} from "../controllers/adminUserController.js";
 
 const router = express.Router();
 
-// Create a new admin or manager
+// Create a new admin user
 router.post("/", createAdminUser);
 
 // Get all admin users

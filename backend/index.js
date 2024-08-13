@@ -37,10 +37,14 @@ import orderRoutes from "./routes/orderRoutes.js";
 import deliveryPersonRoutes from "./routes/deliveryPersonRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
-import reviewRoutes from "./routes/reviewRoutes.js";
+
 import adminUserRoutes from "./routes/adminUserRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import managerRoutes from "./routes/managerRoutes.js";
 
 app.use("/api/adminusers", adminUserRoutes);
+app.use("/api/managers", managerRoutes);
+app.use("/api/chats", chatRoutes);
 
 app.use("/api/payments", paymentRoutes);
 

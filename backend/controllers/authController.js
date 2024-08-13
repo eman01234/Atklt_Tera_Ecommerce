@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import User from "../models/user.js";
 import generateToken from "../utils/generateToken.js";
@@ -28,23 +27,19 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
 
-    // Generate JWT token with user ID and role
-    const payload = {
-      user: {
-        id: user.id,
-        role: user.role,
-      },
-    };
+    // Generate and send JWT token with user info as an HTTP-only cookie
+    generateToken(res, user);
 
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }, // expiration time
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
+    // Respond with user data (excluding password)
+    res.status(200).json({
+      id: user.id,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      address: user.address,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
