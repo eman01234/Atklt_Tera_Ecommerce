@@ -1,6 +1,7 @@
 import AdminUser from "../models/adminUser.js";
 import bcrypt from "bcryptjs";
 import { validationResult } from "express-validator";
+import generateToken from "../utils/generateToken.js";
 
 // Create Admin User
 export const createAdminUser = async (req, res) => {
@@ -105,5 +106,47 @@ export const deleteAdminUser = async (req, res) => {
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: "Error deleting user" });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { email, password } = req.body;
+
+  try {
+    // Check if admin user exists
+    let user = await AdminUser.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ msg: "Invalid Credentials" });
+    }
+
+    // Compare provided password with the stored hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid Credentials" });
+    }
+
+    // Generate and send JWT token with user info as an HTTP-only cookie
+    generateToken(res, user);
+
+    // Respond with user data (excluding password)
+    res.status(200).json({
+      id: user.id,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      address: user.address,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
 };

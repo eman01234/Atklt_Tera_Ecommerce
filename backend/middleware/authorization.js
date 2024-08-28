@@ -1,5 +1,4 @@
-// authorize.js
-import rolesPermissions from "../utils/rolesPermissions";
+import rolesPermissions from "../utils/rolesPermissions.js"; // Ensure the path and extension are correct
 
 const authorize = (role, resource, action) => {
   return (req, res, next) => {
@@ -17,4 +16,5 @@ const authorize = (role, resource, action) => {
   };
 };
 
+// Export both functions individually for better flexibility in importing
 export default authorize;
