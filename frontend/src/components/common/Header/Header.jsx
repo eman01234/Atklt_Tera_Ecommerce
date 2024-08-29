@@ -13,7 +13,7 @@ const Header = () => {
   const accountItem = menu.find((item) => item.name === "Account");
   const otherItems = menu.filter((item) => item.name !== "Account");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isAuth, setIsAuth] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
