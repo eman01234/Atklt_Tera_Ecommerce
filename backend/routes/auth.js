@@ -27,7 +27,6 @@ router.get(
 router.get(
   "/:id",
   auth, // Authenticate the user
-
   getUserById
 );
 

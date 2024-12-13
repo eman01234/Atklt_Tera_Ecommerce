@@ -27,10 +27,10 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
 
-    // Generate and send JWT token with user info as an HTTP-only cookie
-    generateToken(res, user);
-
-    // Respond with user data (excluding password)
+    // Generate the JWT token
+    const token = generateToken(res, user);
+    console.log("respon", token);
+    // Respond with user data (excluding password) and token
     res.status(200).json({
       id: user.id,
       role: user.role,
@@ -39,6 +39,7 @@ export const loginUser = async (req, res) => {
       email: user.email,
       phoneNumber: user.phoneNumber,
       address: user.address,
+      token, // Include the token in the response
     });
   } catch (err) {
     console.error(err.message);

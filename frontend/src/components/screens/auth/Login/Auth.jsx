@@ -6,18 +6,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Truck } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../../slices/userSlice";
+import { useLogin } from "../../../../api/auth/action";
 
 const Auth = () => {
   const [isMerchant, setIsMerchant] = useState(true);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  const [custmerEmail, setCustmerEmail] = useState("");
-  const [custmerPassword, setCustmerPassword] = useState("");
-  const [MerchantEmail, setMerchantEmail] = useState("");
-  const [MerchantPassword, setMerchantPassword] = useState("");
-  const [DeliveryEmail, setDeliveryEmail] = useState("");
-  const [DeliveryPassword, setDeliveryPassword] = useState("");
-
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPassword, setCustomerPassword] = useState("");
+  const [merchantEmail, setMerchantEmail] = useState("");
+  const [merchantPassword, setMerchantPassword] = useState("");
+  const [deliveryEmail, setDeliveryEmail] = useState("");
+  const [deliveryPassword, setDeliveryPassword] = useState("");
+  const loginMutation = useLogin();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,37 +40,37 @@ const Auth = () => {
     };
   }, []);
 
-  const handleLoginCustomer = () => {
-    // Mock user data, replace with actual API call and response
-    const userData = {
-      password: MerchantPassword,
-      email: MerchantEmail,
-      role: "merchant",
-    };
-    dispatch(login(userData));
-    navigate("/aboutus");
+  const handleLogin = (email, password, role) => {
+    const userData = { email, password, role };
+    loginMutation.mutate(userData, {
+      onSuccess: (data) => {
+        dispatch(login(data));
+        if (role === "merchant") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
+      },
+      onError: (error) => {
+        console.error("Login failed:", error.message);
+        alert("Login failed. Please check your credentials.");
+      },
+    });
   };
 
-  const handleLoginMerchant = () => {
-    // Mock mercahnt data, replace with actual API call and response
-    const userData = {
-      password: MerchantPassword,
-      email: MerchantEmail,
-      role: "merchant",
-    };
-    dispatch(login(userData));
-    navigate("/dashboard");
+  const handleLoginCustomer = (e) => {
+    e.preventDefault();
+    handleLogin(customerEmail, customerPassword, "customer");
   };
 
-  const handleLoginDeliver = () => {
-    // Mock user data, replace with actual API call and response
-    const userData = {
-      password: DeliveryPassword,
-      email: DeliveryEmail,
-      role: "Delivery",
-    };
-    dispatch(login(userData));
-    navigate("/dashboard");
+  const handleLoginMerchant = (e) => {
+    e.preventDefault();
+    handleLogin(merchantEmail, merchantPassword, "merchant");
+  };
+
+  const handleLoginDelivery = (e) => {
+    e.preventDefault();
+    handleLogin(deliveryEmail, deliveryPassword, "delivery");
   };
 
   return (
@@ -84,7 +85,10 @@ const Auth = () => {
         {/* Merchant Login */}
         {isMerchant ? (
           <div className="form-container sign-up-container absolute top-0 left-0 h-full w-1/2 transition-all duration-600 ease-in-out opacity-0 z-1">
-            <form className="bg-white flex items-center justify-center flex-col px-12 h-full text-center">
+            <form
+              className="bg-white flex items-center justify-center flex-col px-12 h-full text-center"
+              onSubmit={handleLoginMerchant}
+            >
               <h1 className="font-bold m-0 text-3xl">Welcome Merchant</h1>
               <div className="social-container my-5">
                 <a
@@ -112,19 +116,19 @@ const Auth = () => {
                 className="bg-gray-200 border-none p-3 my-2 w-full"
                 type="email"
                 placeholder="Email"
-                value={MerchantEmail}
+                value={merchantEmail}
                 onChange={(e) => setMerchantEmail(e.target.value)}
               />
               <input
                 className="bg-gray-200 border-none p-3 my-2 w-full"
                 type="password"
                 placeholder="Password"
-                value={MerchantPassword}
+                value={merchantPassword}
                 onChange={(e) => setMerchantPassword(e.target.value)}
               />
               <button
+                type="submit"
                 className="rounded-[20px] border border-amber-400 bg-lime-600 text-white font-bold py-3 px-11 tracking-wider uppercase transition-transform duration-75 transform active:scale-95 focus:outline-none mt-4"
-                onClick={handleLoginMerchant}
               >
                 Sign In
               </button>
@@ -149,7 +153,10 @@ const Auth = () => {
         ) : (
           // Delivery person login
           <div className="form-container sign-up-container absolute top-0 left-0 h-full w-1/2 transition-all duration-600 ease-in-out opacity-0 z-1">
-            <form className="bg-white flex items-center justify-center flex-col px-12 h-full text-center">
+            <form
+              className="bg-white flex items-center justify-center flex-col px-12 h-full text-center"
+              onSubmit={handleLoginDelivery}
+            >
               <h1 className="font-bold m-0 text-3xl">
                 Welcome Delivery Person
               </h1>
@@ -179,34 +186,22 @@ const Auth = () => {
                 className="bg-gray-200 border-none p-3 my-2 w-full"
                 type="email"
                 placeholder="Email"
-                value={DeliveryEmail}
+                value={deliveryEmail}
                 onChange={(e) => setDeliveryEmail(e.target.value)}
               />
               <input
                 className="bg-gray-200 border-none p-3 my-2 w-full"
                 type="password"
                 placeholder="Password"
-                value={DeliveryPassword}
+                value={deliveryPassword}
                 onChange={(e) => setDeliveryPassword(e.target.value)}
               />
               <button
+                type="submit"
                 className="rounded-[20px] border border-amber-400 bg-lime-600 text-white font-bold py-3 px-11 tracking-wider uppercase transition-transform duration-75 transform active:scale-95 focus:outline-none mt-4"
-                onClick={handleLoginDeliver}
               >
                 Sign In
               </button>
-              {isMerchant && (
-                <p>
-                  {" "}
-                  Don't have an account?
-                  <Link
-                    to="/Signup_merchant"
-                    className="text-sm underline my-4 text-sky-600"
-                  >
-                    Sign up
-                  </Link>
-                </p>
-              )}
               <Link
                 to="/Forgot"
                 className="text-sm no-underline my-4 text-sky-600"
@@ -218,7 +213,10 @@ const Auth = () => {
         )}
         {/* Customer Login */}
         <div className="form-container sign-in-container absolute top-0 left-0 h-full w-1/2 transition-all duration-600 ease-in-out z-2">
-          <form className="bg-white flex items-center justify-center flex-col px-12 h-full text-center">
+          <form
+            className="bg-white flex items-center justify-center flex-col px-12 h-full text-center"
+            onSubmit={handleLoginCustomer}
+          >
             <h1 className="font-bold m-0 text-4xl">Sign in</h1>
             <div className="social-container my-5">
               <a
@@ -245,19 +243,19 @@ const Auth = () => {
               className="bg-gray-200 border-none p-3 my-2 w-full"
               type="email"
               placeholder="Email"
-              value={custmerEmail}
-              onChange={(e) => setCustmerEmail(e.target.value)}
+              value={customerEmail}
+              onChange={(e) => setCustomerEmail(e.target.value)}
             />
             <input
               className="bg-gray-200 border-none p-3 my-2 w-full"
               type="password"
               placeholder="Password"
-              value={custmerPassword}
-              onChange={(e) => setCustmerPassword(e.target.value)}
+              value={customerPassword}
+              onChange={(e) => setCustomerPassword(e.target.value)}
             />
             <button
+              type="submit"
               className="rounded-[20px] border border-amber-400 bg-lime-600 text-white font-bold py-3 px-11 tracking-wider uppercase transition-transform duration-75 transform active:scale-95 focus:outline-none mt-4"
-              onClick={handleLoginCustomer}
             >
               Sign In
             </button>

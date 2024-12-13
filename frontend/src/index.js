@@ -28,76 +28,80 @@ import OrderDetail from "./components/modules/Dashboard/OrderDetail";
 import OrderList from "./components/modules/Dashboard/OrderList";
 import DeliveryList from "./components/modules/Dashboard/DeliveryList";
 import FloatChat from "./components/common/floatMessage/FloatChat";
-import PrivateRoute from "./slices/PrivateRoute";
+import PrivateRoute from "./routes/PrivateRoute";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <FloatChat />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/signUp" element={<Auth />} />
-          <Route path="/product" element={<Product />} />
-          <Route path="/Vegitables" element={<Vegitables />} />
-          <Route path="/Fruits" element={<Fruits />} />
-          <Route path="/Spices" element={<Spices />} />
-          <Route path="/CartItems" element={<CartItems />} />
-          <Route path="/aboutus" element={<AboutusPage />} />
-          <Route path="/ProductDetail" element={<ProductDetail />} />
-          <Route path="/Signup_customer" element={<Signup_customer />} />
-          <Route path="/Forgot" element={<Forgot />} />
-          <Route path="/Signup_merchant" element={<Signup_merchant />} />
-          <Route path="/UserProfile" element={<UserProfile />} />
-          <Route path="/UserSettings" element={<UserSettings />} />
-          <Route path="/Logout" element={<Logout />} />
-          <Route path="/AddProduct" element={<AddProduct />} />
-          <Route path="/Chat" element={<ChatPage />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/Subscription" element={<SubscriptionPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/orders"
-            element={
-              <PrivateRoute>
-                <OrderList />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/order/:id"
-            element={
-              <PrivateRoute>
-                <OrderDetail />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/delivery-list"
-            element={
-              <PrivateRoute>
-                <DeliveryList />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/Delivery_order/:id"
-            element={
-              <PrivateRoute>
-                <OrderDetail />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </Router>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <Router>
+          <FloatChat />
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/signUp" element={<Auth />} />
+            <Route path="/product" element={<Product />} />
+            <Route path="/Vegitables" element={<Vegitables />} />
+            <Route path="/Fruits" element={<Fruits />} />
+            <Route path="/Spices" element={<Spices />} />
+            <Route path="/CartItems" element={<CartItems />} />
+            <Route path="/aboutus" element={<AboutusPage />} />
+            <Route path="/ProductDetail" element={<ProductDetail />} />
+            <Route path="/Signup_customer" element={<Signup_customer />} />
+            <Route path="/Forgot" element={<Forgot />} />
+            <Route path="/Signup_merchant" element={<Signup_merchant />} />
+            <Route path="/UserProfile" element={<UserProfile />} />
+            <Route path="/UserSettings" element={<UserSettings />} />
+            <Route path="/Logout" element={<Logout />} />
+            <Route path="/AddProduct" element={<AddProduct />} />
+            <Route path="/Chat" element={<ChatPage />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/Subscription" element={<SubscriptionPage />} />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <PrivateRoute>
+                  <OrderList />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/order/:id"
+              element={
+                <PrivateRoute>
+                  <OrderDetail />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/delivery-list"
+              element={
+                <PrivateRoute>
+                  <DeliveryList />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/Delivery_order/:id"
+              element={
+                <PrivateRoute>
+                  <OrderDetail />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </Router>
+      </Provider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

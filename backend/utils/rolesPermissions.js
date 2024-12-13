@@ -31,7 +31,7 @@ const rolesPermissions = {
       users: ["READ", "WRITE", "DELETE"],
     },
   },
-  Merchant: {
+  merchant: {
     resources: {
       products: ["READ", "WRITE", "DELETE"],
       productreviews: ["READ"],

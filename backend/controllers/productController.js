@@ -5,10 +5,13 @@ import path from "path";
 
 import Merchant from "../models/merchant.js";
 import { validationResult } from "express-validator";
+import { console } from "inspector";
 
 // Create Product Controller
 export const createProduct = async (req, res) => {
   try {
+    const userId = req.user;
+    console.log("usr", userId);
     // Validate request input
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -16,8 +19,10 @@ export const createProduct = async (req, res) => {
     }
 
     // Destructure request body
-    const { merchant, name, description, category, price, quantity, isActive } =
-      req.body;
+    const { name, description, price } = req.body;
+
+    const merchant = await Merchant.findOne({ userId });
+    const category = "66b765b3eaeca0654c528a9c";
 
     // Check if the merchant exists
     const existingMerchant = await Merchant.findById(merchant);
@@ -41,9 +46,8 @@ export const createProduct = async (req, res) => {
       description,
       category,
       price,
-      quantity,
+
       imageUrl, // This now stores the single image URL
-      isActive,
     });
 
     // Save the Product

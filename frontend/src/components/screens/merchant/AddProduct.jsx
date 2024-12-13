@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAddProduct } from "../../../api/product/action";
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -6,8 +7,10 @@ const AddProduct = () => {
     description: "",
     category: "",
     price: "",
-    image: null,
+    imageUrl: null,
   });
+
+  const { mutate, isLoading, isError, isSuccess, error } = useAddProduct();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,35 +23,26 @@ const AddProduct = () => {
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      image: e.target.files[0],
+      imageUrl: e.target.files[0],
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here (e.g., send data to server)
-    console.log("Form Data:", formData);
 
-    // You might want to use FormData to handle file uploads
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
     formDataToSend.append("description", formData.description);
     formDataToSend.append("category", formData.category);
     formDataToSend.append("price", formData.price);
-    formDataToSend.append("image", formData.image);
+    formDataToSend.append("imageUrl", formData.imageUrl);
 
-    // Example: Send formDataToSend to the server
-    // fetch('/api/upload', {
-    //   method: 'POST',
-    //   body: formDataToSend,
-    // }).then(response => response.json())
-    //   .then(data => console.log(data))
-    //   .catch(error => console.error(error));
+    mutate(formDataToSend);
   };
 
   return (
     <div className="flex items-start justify-center min-h-screen mx-10 ">
-      <div className="w-full max-h-full p-8  space-y-4 bg-white rounded-lg shadow-lg">
+      <div className="w-full max-h-full p-8 space-y-4 bg-white rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold text-center text-gray-800">
           Add Product
         </h2>
@@ -99,7 +93,6 @@ const AddProduct = () => {
               placeholder="Product Description"
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Price
@@ -120,7 +113,7 @@ const AddProduct = () => {
             </label>
             <input
               type="file"
-              name="image"
+              name="imageUrl"
               onChange={handleFileChange}
               required
               className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -128,10 +121,15 @@ const AddProduct = () => {
           </div>
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full py-2 font-medium text-white bg-primary rounded-md hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Add Product
+            {isLoading ? "Submitting..." : "Add Product"}
           </button>
+          {isError && <p className="text-red-500">{error.message}</p>}
+          {isSuccess && (
+            <p className="text-green-500">Product added successfully!</p>
+          )}
         </form>
       </div>
     </div>

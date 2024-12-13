@@ -24,6 +24,8 @@ const generateToken = (res, user) => {
     sameSite: "strict",
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
+
+  return token; // Return the token
 };
 
 export default generateToken;
